@@ -1,0 +1,38 @@
+kubevirt/fedora30-cloud-container-disk-demo
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: testfedoravm
+spec:
+  running: false
+  template:
+    metadata:
+      labels:
+        kubevirt.io/size: small
+        kubevirt.io/domain: testfedoravm
+    spec:
+      domain:
+        devices:
+          disks:
+          - disk:
+              bus: virtio
+            name: rootfs
+          - disk:
+              bus: virtio
+            name: cloudinit
+          interfaces:
+          - name: default
+            bridge: {}
+        resources:
+          requests:
+            memory: 64M
+      networks:
+      - name: default
+        pod: {}
+      volumes:
+        - name: rootfs
+          containerDisk:
+            image: kubevirt/fedora30-cloud-container-disk-demo
+        - name: cloudinit
+          cloudInitNoCloud:
+            userDataBase64: SGkuXG4=
